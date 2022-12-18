@@ -1,7 +1,10 @@
+import bcrypt from "bcrypt";
+import { v4 as uuidV4 } from "uuid";
 import connection from "../database/db.js";
 
 export async function postSignup(req, res) {
   const { name, email, password } = req.body;
+  const passwordHash = await bcrypt.hash(password, 10);
 
   try {
     await connection.query(
@@ -11,7 +14,7 @@ export async function postSignup(req, res) {
         VALUES 
           ($1, $2, $3)
         `,
-      [name, email, password]
+      [name, email, passwordHash]
     );
 
     res.sendStatus(201);
