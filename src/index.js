@@ -17,5 +17,5 @@ app.use(urlRoute);
 app.use(rankingRoute);
 app.use(usersRoute);
 
-const port = process.env.PORT || 4000;
-app.listen(port, () => console.log(`Server runniong in port ${port}`));
+const port = process.env.PORT_URI || 4000;
+app.listen(port, () => console.log(`Server running in port ${port}`));
