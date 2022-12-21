@@ -24,7 +24,6 @@ export async function postSignupVal(req, res, next) {
       return res.status(409).send("Email já foi cadastrado.");
     }
   } catch (err) {
-    console.log(err);
     return res.status(500).send(err);
   }
 

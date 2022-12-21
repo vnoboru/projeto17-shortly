@@ -49,7 +49,7 @@ export async function getUrl(req, res) {
   try {
     const urlData = await connection.query(
       `
-      SELECT (id, url, "shortUrl")
+      SELECT id, "shortUrl", url
       FROM urls WHERE id = $1
       `,
       [id]
@@ -65,6 +65,38 @@ export async function getUrl(req, res) {
   }
 }
 
-export async function getShortUrl(req, res) {}
+export async function getShortUrl(req, res) {
+  const { shortUrl } = req.params;
+
+  try {
+    const shortUrlData = await connection.query(
+      `
+      SELECT *
+      FROM urls
+      WHERE "shortUrl" = $1
+      `,
+      [shortUrl]
+    );
+
+    console.log(shortUrlData.rows);
+    if (shortUrlData.rows.length === 0) {
+      return res.sendStatus(404);
+    }
+
+    await connection.query(
+      `
+      UPDATE urls
+      SET "visitCount" = "visitCount" + 1
+      WHERE "shortUrl" = $1
+      `,
+      [shortUrl]
+    );
+
+    console.log(shortUrlData.rows[0].url);
+    res.redirect(shortUrlData.rows[0].url);
+  } catch (err) {
+    res.status(500).send(err);
+  }
+}
 
 export async function deleteUrl(req, res) {}
