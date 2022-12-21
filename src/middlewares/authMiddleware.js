@@ -17,7 +17,7 @@ export async function postSignupVal(req, res, next) {
       FROM users
       WHERE email = $1
       `,
-      [user]
+      [user.email]
     );
 
     if (verifyEmail.rows.length > 0) {

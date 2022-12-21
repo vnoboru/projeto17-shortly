@@ -4,10 +4,9 @@ import connection from "../database/db.js";
 
 export async function postSignup(req, res) {
   const { name, email, password } = req.body;
-  console.log(name, email, password);
+  const passwordHash = bcrypt.hashSync(password, 10);
 
   try {
-    const passwordHash = bcrypt.hashSync(password, 10);
     await connection.query(
       `
       INSERT INTO users (name, email, password)
@@ -16,7 +15,7 @@ export async function postSignup(req, res) {
       [name, email, passwordHash]
     );
 
-    return res.status(201).send("Criado com sucesso.");
+    return res.sendStatus(201);
   } catch (err) {
     return res.status(500).send(err);
   }
@@ -31,16 +30,21 @@ export async function postSignin(req, res) {
       [email]
     );
 
+    if (verifyEmail.rows.length === 0) {
+      return res.sendStatus(401);
+    }
+
     const verifyPassword = await bcrypt.compare(
       password,
       verifyEmail.rows[0].password
     );
 
-    if (verifyEmail.rows.length === 0 || !verifyPassword) {
+    if (!verifyPassword) {
       return res.sendStatus(401);
     }
 
     const token = uuidV4();
+
     await connection.query(
       'INSERT INTO sessions ("userId", token) VALUES ($1, $2)',
       [verifyEmail.rows[0].id, token]
