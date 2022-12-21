@@ -36,13 +36,34 @@ export async function postUrl(req, res) {
       `,
       [userId, url, shortUrl]
     );
-    res.status(201).send({ shortUrl });
-  } catch {
-    res.sendStatus(500);
+
+    return res.status(201).send({ shortUrl });
+  } catch (err) {
+    return res.status(500).send(err);
   }
 }
 
-export async function getUrl(req, res) {}
+export async function getUrl(req, res) {
+  const { id } = req.params;
+
+  try {
+    const urlData = await connection.query(
+      `
+      SELECT (id, url, "shortUrl")
+      FROM urls WHERE id = $1
+      `,
+      [id]
+    );
+
+    if (urlData.rows.length === 0) {
+      return res.sendStatus(404);
+    }
+
+    return res.status(200).send(urlData.rows);
+  } catch (err) {
+    return res.status(500).send(err);
+  }
+}
 
 export async function getShortUrl(req, res) {}
 
