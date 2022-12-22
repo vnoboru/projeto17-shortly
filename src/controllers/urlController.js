@@ -99,4 +99,20 @@ export async function getShortUrl(req, res) {
   }
 }
 
-export async function deleteUrl(req, res) {}
+export async function deleteUrl(req, res) {
+  const { id } = req.params;
+
+  try {
+    await connection.query(
+      `
+      DELETE FROM urls
+      WHERE id = $1
+      `,
+      [id]
+    );
+
+    res.sendStatus(204);
+  } catch (err) {
+    res.status(500).send(err);
+  }
+}

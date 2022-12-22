@@ -7,6 +7,6 @@ const urlRoute = Router();
 urlRoute.post("/urls/shorten", postUrlVal, postUrl);
 urlRoute.get("/urls/:id", getUrl);
 urlRoute.get("/urls/open/:shortUrl", getShortUrl);
-urlRoute.delete("urls/:id", deleteUrlVal, deleteUrl);
+urlRoute.delete("/urls/:id", deleteUrlVal, deleteUrl);
 
 export default urlRoute;
