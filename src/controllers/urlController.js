@@ -78,7 +78,6 @@ export async function getShortUrl(req, res) {
       [shortUrl]
     );
 
-    console.log(shortUrlData.rows);
     if (shortUrlData.rows.length === 0) {
       return res.sendStatus(404);
     }
@@ -92,7 +91,6 @@ export async function getShortUrl(req, res) {
       [shortUrl]
     );
 
-    console.log(shortUrlData.rows[0].url);
     res.redirect(shortUrlData.rows[0].url);
   } catch (err) {
     res.status(500).send(err);

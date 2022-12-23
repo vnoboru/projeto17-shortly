@@ -29,7 +29,6 @@ export async function getUsers(req, res) {
 
     res.send(object.rows).status(200);
   } catch (err) {
-    console.log(err);
-    res.sendStatus(500);
+    res.status(500).send(err);
   }
 }
